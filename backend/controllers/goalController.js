@@ -1,8 +1,8 @@
 // all the requests(controllers) here for a better and clean code 
+// package express async handler : use the error handler and no trycatchs
 // Desc => Get the goals
 // Route => GET/api/goals
 // Acces => private  
-// package express async handler : use the error handler and no trycatchs
 const asyncHandler = require('express-async-handler');
 
 const Goal = require('../models/goalModel')
