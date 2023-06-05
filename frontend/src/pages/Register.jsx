@@ -1,5 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {useSelector , useDispatch } from "react-redux";
+import {useNavigate } from "react-router-dom"
+import {toast} from "react-toastify";
+import Spinner from "../components/Spinner"
+import {register , reset } from "../features/auth/authSlice"
 import { FaUser } from "react-icons/fa";
+
+
 function Register() {
   const [formData, setformData] = useState({
     name: "",
@@ -9,6 +16,26 @@ function Register() {
   });
 
 const { name, email, password, password2 } = formData;
+const navigate = useNavigate();
+const dispatch = useDispatch();
+
+const { user, isLoading, isError, isSuccess ,message }= useSelector(
+    (state) => state.auth
+    );
+
+
+useEffect(() =>{
+    if (isError){
+        toast.error(message)
+    }
+    // IF USER LOGGED IN THEN GO TO / 
+    if (isSuccess || user ){
+        navigate ('/')
+    }
+
+    dispatch(reset())
+
+},[user , isError, isSuccess , message , dispatch , navigate ])
 
 const onChange= (e) => {
     setformData((prevState) => ({
@@ -20,8 +47,25 @@ const onChange= (e) => {
 
 const onSubmit= (e) => {
     e.preventDefault();
-}
 
+    if (password !== password2){
+        toast.error('Passwords do not match')
+    }else{
+        const userData = {
+            name,
+            email,
+            password,
+        }
+
+    dispatch(register(userData))
+    }
+
+
+}
+if (isLoading){
+    return <Spinner />
+    // i stopped here i need to open the serveer to check if the user can bre registred an will be redirected to /
+}
 return (
         <div>
         <section className="heading">
